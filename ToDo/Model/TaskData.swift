@@ -19,12 +19,27 @@ class TaskData: ObservableObject {
     }
     
     private static func getToDoFileURL() throws -> URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("ToDo")
-        print("accessed ToDo url")
+            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("todo.data", conformingTo: .json)
     }
     func load() {
         do {
-            
+            let fileURL  = try TaskData.getToDoFileURL()
+            let data = try Data(contentsOf: fileURL)
+            tasks = try JSONDecoder().decode([Task].self, from: data)
+            print("Tasks loaded: \(tasks.count)")
+        } catch {
+            print("Failed to load from file.")
+        }
+    }
+    
+    func save() {
+        do {
+            let fileURL = try TaskData.getToDoFileURL()
+            let data = try JSONEncoder().encode(tasks)
+            try data.write(to: fileURL, options: [.atomic, .completeFileProtection])
+            print("Tasks saved")
+        } catch {
+            print("Unable to save")
         }
     }
     

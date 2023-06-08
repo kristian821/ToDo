@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Task: Equatable, Comparable, Codable {
-    var id: UUID = UUID()
+struct Task: Identifiable, Hashable, Codable {
+    var id = UUID()
     
-    var title: String
-    var detail: String?
+    var title: String = ""
+//    var detail: String?
     
     enum state {
         case inProgress
@@ -19,16 +19,5 @@ struct Task: Equatable, Comparable, Codable {
         case waiting
         case paused
     }
-    
-    static func < (lhs: Task, rhs: Task) -> Bool {
-        
-        return lhs.title < rhs.title
-    }
-    
-    let taskEncoder = JSONEncoder()
-    if let decodedTask = try? taskEncoder.decode(Task.self, from: decodedTask)
-    
-    let taskDecoder = JSONDecoder()
-    
     
 }
